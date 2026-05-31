@@ -4,9 +4,10 @@ import { Content } from './entities/content.entity';
 import { ContentService } from './content.service';
 import { CacheService } from '../cache/cache.service'
 import { ContentController } from './content.controller';
+import { AnalyticsModule } from '../analytics/analytics.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Content])],
+  imports: [TypeOrmModule.forFeature([Content]), AnalyticsModule],
   providers: [ContentService, CacheService],
   controllers: [ContentController],
 })

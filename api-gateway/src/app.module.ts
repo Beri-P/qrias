@@ -6,6 +6,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ContentModule } from './content/content.module';
 import { RedisModule } from './redis/redis.module';
+import { AnalyticsModule } from './analytics/analytics.module'
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { RedisModule } from './redis/redis.module';
     UsersModule,
     ContentModule,
     RedisModule,
+    AnalyticsModule,
   ],
 })
 export class AppModule {}

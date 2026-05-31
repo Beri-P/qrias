@@ -1,17 +1,27 @@
-import { Controller, Get, Post, Delete, Param, Body, Query, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Param, Body, Query, UseGuards, Req, Ip } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { Content } from './entities/content.entity';
 import { ContentService } from './content.service';
 import { CreateContentDto } from './dto/create-content.dto';
+import { AnalyticsService } from '../analytics/analytics.service';
 
 @Controller('content')
 export class ContentController {
-  constructor(private service: ContentService) {}
+  constructor(
+    private service: ContentService, 
+    private analytics: AnalyticsService,
+  ) {}
 
   @Get()
   findAll(@Query('type') type?: string) { return this.service.findAll(type); }
 
   @Get(':id')
-  findOne(@Param('id') id: string) { return this.service.findOne(id); }
+  async findOne(@Param('id') id: string, @Req() req, @Ip() ip: string) {
+    const content = await this.service.findOne(id) as Content;
+    // Track the analytics event
+    this.analytics.track(id, content.type, req.user?.id ?? null, ip).catch(() => {});
+    return content;
+  }
 
   @Post()
   @UseGuards(AuthGuard('jwt'))
