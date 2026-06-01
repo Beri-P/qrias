@@ -6,7 +6,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ContentModule } from './content/content.module';
 import { RedisModule } from './redis/redis.module';
-import { AnalyticsModule } from './analytics/analytics.module'
+import { AnalyticsModule } from './analytics/analytics.module';
 
 @Module({
   imports: [

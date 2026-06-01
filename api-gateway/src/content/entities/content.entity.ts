@@ -1,11 +1,24 @@
 import {
-  Entity, PrimaryGeneratedColumn, Column,
-  CreateDateColumn, UpdateDateColumn, ManyToOne,
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToOne,
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 
-export enum ContentType { VIDEO = 'video', ARTICLE = 'article', AUDIO = 'audio', LIVE = 'live' }
-export enum ContentStatus { DRAFT = 'draft', PUBLISHED = 'published', ARCHIVED = 'archived' }
+export enum ContentType {
+  VIDEO = 'video',
+  ARTICLE = 'article',
+  AUDIO = 'audio',
+  LIVE = 'live',
+}
+export enum ContentStatus {
+  DRAFT = 'draft',
+  PUBLISHED = 'published',
+  ARCHIVED = 'archived',
+}
 
 @Entity('content')
 export class Content {

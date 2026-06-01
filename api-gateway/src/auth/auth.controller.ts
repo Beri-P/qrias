@@ -9,12 +9,18 @@ export class AuthController {
   constructor(private auth: AuthService) {}
 
   @Post('register')
-  register(@Body() dto: RegisterDto) { return this.auth.register(dto); }
+  register(@Body() dto: RegisterDto) {
+    return this.auth.register(dto);
+  }
 
   @Post('login')
-  login(@Body() dto: LoginDto) { return this.auth.login(dto); }
+  login(@Body() dto: LoginDto) {
+    return this.auth.login(dto);
+  }
 
   @Get('me')
   @UseGuards(AuthGuard('jwt'))
-  me(@Req() req) { return req.user; }
+  me(@Req() req) {
+    return req.user;
+  }
 }

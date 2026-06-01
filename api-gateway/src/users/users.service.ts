@@ -9,7 +9,9 @@ export class UsersService {
   constructor(@InjectRepository(User) private repo: Repository<User>) {}
 
   async findByEmail(email: string, withPassword = false): Promise<User | null> {
-    const qb = this.repo.createQueryBuilder('u').where('u.email = :email', { email });
+    const qb = this.repo
+      .createQueryBuilder('u')
+      .where('u.email = :email', { email });
     if (withPassword) qb.addSelect('u.password');
     return qb.getOne();
   }
@@ -18,15 +20,30 @@ export class UsersService {
     return this.repo.findOneBy({ id });
   }
 
-  async createLocal(email: string, name: string, password: string): Promise<User> {
+  async createLocal(
+    email: string,
+    name: string,
+    password: string,
+  ): Promise<User> {
     const exists = await this.findByEmail(email);
     if (exists) throw new ConflictException('Email already registered');
     const hashed = await bcrypt.hash(password, 12);
-    const user = this.repo.create({ email, name, password: hashed, provider: AuthProvider.LOCAL });
+    const user = this.repo.create({
+      email,
+      name,
+      password: hashed,
+      provider: AuthProvider.LOCAL,
+    });
     return this.repo.save(user);
   }
 
-  async findOrCreateOAuth(profile: { email: string; name: string; providerId: string; avatarUrl: string; provider: AuthProvider }): Promise<User> {
+  async findOrCreateOAuth(profile: {
+    email: string;
+    name: string;
+    providerId: string;
+    avatarUrl: string;
+    provider: AuthProvider;
+  }): Promise<User> {
     let user = await this.findByEmail(profile.email);
     if (!user) {
       user = this.repo.create(profile);

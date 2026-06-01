@@ -1,10 +1,20 @@
 import {
-  Entity, PrimaryGeneratedColumn, Column,
-  CreateDateColumn, UpdateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
-export enum UserRole { ADMIN = 'admin', EDITOR = 'editor', VIEWER = 'viewer' }
-export enum AuthProvider { LOCAL = 'local', GOOGLE = 'google' }
+export enum UserRole {
+  ADMIN = 'admin',
+  EDITOR = 'editor',
+  VIEWER = 'viewer',
+}
+export enum AuthProvider {
+  LOCAL = 'local',
+  GOOGLE = 'google',
+}
 
 @Entity('users')
 export class User {
