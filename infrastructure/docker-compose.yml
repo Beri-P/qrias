@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   postgres:
     image: postgres:16-alpine
@@ -14,6 +12,10 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 10s
+      retries: 5
 
   mongo:
     image: mongo:7-jammy
@@ -26,7 +28,6 @@ services:
       - "27017:27017"
     volumes:
       - mongo_data:/data/db
-
   redis:
     image: redis:7-alpine
     container_name: qrias_redis
@@ -34,6 +35,38 @@ services:
     command: redis-server --requirepass ${REDIS_PASSWORD}
     ports:
       - "6379:6379"
+
+  api-gateway:
+    build:
+      context: ../api-gateway
+    #target: production
+    container_name: qrias_api
+    restart: unless-stopped
+    env_file: ../api-gateway/.env
+    environment:
+      DB_HOST: postgres
+      REDIS_HOST: redis
+      MONGO_URI: mongodb://${MONGO_USER}:${MONGO_PASSWORD}@mongo:27017/qrias_analytics?authSource=admin
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mongo:
+        condition: service_started
+      redis:
+        condition: service_started
+
+  frontend:
+    build:
+      context: ../frontend
+      #target: production
+    container_name: qrias_frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - api-gateway
 
 volumes:
   postgres_data:
